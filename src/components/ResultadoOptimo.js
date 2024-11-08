@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
 
 const ResultadoOptimo = ({ ofertas }) => {
   const [resultado, setResultado] = useState(null);
@@ -21,10 +21,15 @@ const ResultadoOptimo = ({ ofertas }) => {
     });
 
     // 2. Analizar todas las combinaciones de paquetes y precios individuales
-    ofertas.forEach(oferta => {
+    ofertas.forEach((oferta, oferenteIndex) => {
       // Añadir ofertas individuales como combinaciones
       Object.entries(oferta.ofertas_individuales).forEach(([nodo, precio]) => {
-        combinaciones.push({ nodos: [nodo], precio });
+        combinaciones.push({
+          nodos: [nodo],
+          precio,
+          oferente: `Oferente${oferenteIndex + 1}`,
+          tipo: 'individual'
+        });
       });
 
       // Añadir ofertas en paquete como combinaciones, si cumplen con la condición de precios mínimos
@@ -34,7 +39,12 @@ const ResultadoOptimo = ({ ofertas }) => {
         });
 
         if (esPaqueteValido) {
-          combinaciones.push({ nodos: paquete.nodos, precio: paquete.precio_total });
+          combinaciones.push({
+            nodos: paquete.nodos,
+            precio: paquete.precio_total,
+            oferente: `Oferente${oferenteIndex + 1}`,
+            tipo: 'paquete'
+          });
         }
       });
     });
@@ -74,18 +84,28 @@ const ResultadoOptimo = ({ ofertas }) => {
 
   return (
     <Box mt={4}>
-      <Button variant="contained" onClick={calcularMejorCombinacion}>Calcular Mejor Combinación</Button>
+      <Button variant="contained" color="primary" onClick={calcularMejorCombinacion}>
+        Calcular Mejor Combinación
+      </Button>
+      
       {resultado && (
         <Box mt={2}>
           <Typography variant="h6">Mejor Precio Total: ${resultado.mejorPrecioTotal}</Typography>
-          <Typography variant="subtitle1">Combinación Óptima:</Typography>
-          <ul>
+          <Typography variant="subtitle1">Detalles de la Combinación Óptima:</Typography>
+          <List>
             {resultado.mejorCombinacion.map((combo, index) => (
-              <li key={index}>
-                Nodos: {combo.nodos.join(', ')} - Precio: ${combo.precio}
-              </li>
+              <ListItem key={index}>
+                <ListItemText
+                  primary={
+                    combo.tipo === 'paquete'
+                      ? `Paquete (${combo.nodos.join(', ')})`
+                      : `Nodo Individual (${combo.nodos[0]})`
+                  }
+                  secondary={`Oferente: ${combo.oferente} - Precio: $${combo.precio}`}
+                />
+              </ListItem>
             ))}
-          </ul>
+          </List>
         </Box>
       )}
     </Box>
