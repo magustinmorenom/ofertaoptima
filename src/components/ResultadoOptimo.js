@@ -43,7 +43,8 @@ const ResultadoOptimo = ({ ofertas }) => {
             nodos: paquete.nodos,
             precio: paquete.precio_total,
             oferente: `Oferente${oferenteIndex + 1}`,
-            tipo: 'paquete'
+            tipo: 'paquete',
+            precioPromedioPorNodo: (paquete.precio_total / paquete.nodos.length).toFixed(2) // Cálculo del precio promedio por nodo
           });
         }
       });
@@ -101,7 +102,11 @@ const ResultadoOptimo = ({ ofertas }) => {
                       ? `Paquete (${combo.nodos.join(', ')})`
                       : `Nodo Individual (${combo.nodos[0]})`
                   }
-                  secondary={`Oferente: ${combo.oferente} - Precio: $${combo.precio}`}
+                  secondary={
+                    combo.tipo === 'paquete'
+                      ? `Oferente: ${combo.oferente} - Precio Total: $${combo.precio} - Precio Promedio por Nodo: $${combo.precioPromedioPorNodo}`
+                      : `Oferente: ${combo.oferente} - Precio: $${combo.precio}`
+                  }
                 />
               </ListItem>
             ))}

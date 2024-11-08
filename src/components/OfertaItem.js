@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
+import { List, ListItem, ListItemText, Typography, Box, Stack, Card } from '@mui/material';
 
 const OfertaItem = ({ oferta }) => {
   return (
@@ -9,20 +9,39 @@ const OfertaItem = ({ oferta }) => {
       <List>
         {Object.entries(oferta.ofertas_individuales).map(([nodo, precio], index) => (
           <ListItem key={index}>
-            <ListItemText primary={`${nodo}: $${precio}`} />
+            <Card sx={{ backgroundColor: 'lightblue', padding: 1, width: '100%' }}>
+              <Stack direction="row" spacing={1}>
+                <Typography variant="body2">{nodo}:</Typography>
+                <Typography variant="body2">${precio}</Typography>
+              </Stack>
+            </Card>
           </ListItem>
         ))}
       </List>
       <Typography variant="subtitle1">Ofertas por Paquete:</Typography>
       <List>
-        {oferta.ofertas_paquete.map((paquete, index) => (
-          <ListItem key={index}>
-            <ListItemText
-              primary={`Nodos: ${paquete.nodos.join(', ')}`}
-              secondary={`Precio Total: $${paquete.precio_total} (Descuento: ${paquete.descuento})`}
-            />
-          </ListItem>
-        ))}
+        {oferta.ofertas_paquete.map((paquete, index) => {
+          const avgPricePerNode = (paquete.precio_total / paquete.nodos.length).toFixed(2);
+          return (
+            <ListItem key={index}>
+              <Card sx={{ backgroundColor: 'lightblue', padding: 1, width: '100%' }}>
+                <ListItemText
+                  primary={
+                    <Typography variant="body2">
+                      Nodos: {paquete.nodos.join(', ')}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="body2">
+                      Precio Total: ${paquete.precio_total} (Descuento: {paquete.descuento})<br />
+                      Promedio por Nodo: ${avgPricePerNode}
+                    </Typography>
+                  }
+                />
+              </Card>
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );

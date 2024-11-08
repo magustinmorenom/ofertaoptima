@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Divider } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Divider } from '@mui/material';
 import OfertaItem from './components/OfertaItem';
 import ResultadoOptimo from './components/ResultadoOptimo';
 
@@ -19,27 +19,38 @@ const App = () => {
       .catch(error => console.error('Error:', error));
   }, []);
 
+  useEffect(() => {
+    document.body.style.background = 'linear-gradient(to bottom, lightgrey, turquoise)';
+    return () => {
+      document.body.style.background = '';
+    };
+  }, []);
+
   return (
     <Container maxWidth="xl" sx={{ padding: '20px' }}>
       <Typography variant="h4" align="center" gutterBottom>
         Ofertas de Licitación
       </Typography>
 
-      <Grid container spacing={2}>
+      <Box display="flex" flexWrap="wrap" justifyContent="space-around">
         {ofertas.map((oferta, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Box key={index} p={1} width={{ xs: '100%', sm: '48%', md: '31%', lg: '23%' }}>
             <Card variant="outlined">
               <CardContent>
                 <OfertaItem oferta={oferta} />
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
 
       <Divider sx={{ marginY: 4 }} />
 
-      <ResultadoOptimo ofertas={ofertas} />
+      <Card >
+        <CardContent>
+          <ResultadoOptimo ofertas={ofertas} />
+        </CardContent>
+      </Card>
     </Container>
   );
 };
