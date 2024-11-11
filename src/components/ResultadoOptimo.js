@@ -27,7 +27,8 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
           nodos: [nodo],
           precio,
           oferente: oferta.oferente,
-          tipo: 'individual'
+          tipo: 'individual',
+          nodo: nodo // Añadir nodo específico
         });
       });
 
@@ -77,8 +78,9 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
 
     buscarCombinacionOptima(nodos, [], 0);
 
+    const totalCombinaciones = combinaciones.length;
     setResultado({ mejorPrecioTotal, mejorCombinacion });
-    onResultadoOptimo(mejorCombinacion); // Enviar la combinación óptima a App
+    onResultadoOptimo(mejorCombinacion, combinaciones, totalCombinaciones); // Pasar el total de combinaciones
   };
 
   return (
@@ -98,7 +100,7 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
                   primary={
                     combo.tipo === 'paquete'
                       ? `Paquete (${combo.nodos.join(', ')})`
-                      : `Nodo Individual (${combo.nodos[0]})`
+                      : `Nodo Individual (${combo.nodo})`
                   }
                   secondary={`Oferente: ${combo.oferente} - Precio: $${combo.precio}`}
                 />
