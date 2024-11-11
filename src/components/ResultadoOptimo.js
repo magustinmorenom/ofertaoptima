@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
 
-const ResultadoOptimo = ({ ofertas }) => {
+const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
   const [resultado, setResultado] = useState(null);
 
   const calcularMejorCombinacion = () => {
@@ -9,7 +9,7 @@ const ResultadoOptimo = ({ ofertas }) => {
     const combinaciones = [];
     const precioMinimoPorNodo = {};
 
-    // 1. Crear un mapa con el precio mínimo individual para cada nodo
+    // Crear un mapa con el precio mínimo individual para cada nodo
     nodos.forEach(nodo => {
       let precioMinimo = Infinity;
       ofertas.forEach(oferta => {
@@ -20,19 +20,17 @@ const ResultadoOptimo = ({ ofertas }) => {
       precioMinimoPorNodo[nodo] = precioMinimo;
     });
 
-    // 2. Analizar todas las combinaciones de paquetes y precios individuales
+    // Analizar combinaciones de paquetes y precios individuales
     ofertas.forEach((oferta, oferenteIndex) => {
-      // Añadir ofertas individuales como combinaciones
       Object.entries(oferta.ofertas_individuales).forEach(([nodo, precio]) => {
         combinaciones.push({
           nodos: [nodo],
           precio,
-          oferente: `Oferente${oferenteIndex + 1}`,
+          oferente: oferta.oferente,
           tipo: 'individual'
         });
       });
 
-      // Añadir ofertas en paquete como combinaciones, si cumplen con la condición de precios mínimos
       oferta.ofertas_paquete.forEach(paquete => {
         const esPaqueteValido = paquete.nodos.every(nodo => {
           return paquete.precio_total / paquete.nodos.length <= precioMinimoPorNodo[nodo];
@@ -42,15 +40,15 @@ const ResultadoOptimo = ({ ofertas }) => {
           combinaciones.push({
             nodos: paquete.nodos,
             precio: paquete.precio_total,
-            oferente: `Oferente${oferenteIndex + 1}`,
+            oferente: oferta.oferente,
             tipo: 'paquete',
-            precioPromedioPorNodo: (paquete.precio_total / paquete.nodos.length).toFixed(2) // Cálculo del precio promedio por nodo
+            precioPromedioPorNodo: (paquete.precio_total / paquete.nodos.length).toFixed(2)
           });
         }
       });
     });
 
-    // 3. Buscar la combinación óptima que cubra todos los nodos con el menor precio total
+    // Buscar la combinación óptima
     let mejorPrecioTotal = Infinity;
     let mejorCombinacion = [];
 
@@ -79,8 +77,8 @@ const ResultadoOptimo = ({ ofertas }) => {
 
     buscarCombinacionOptima(nodos, [], 0);
 
-    // 4. Guardar el resultado óptimo en el estado
     setResultado({ mejorPrecioTotal, mejorCombinacion });
+    onResultadoOptimo(mejorCombinacion); // Enviar la combinación óptima a App
   };
 
   return (
@@ -102,11 +100,7 @@ const ResultadoOptimo = ({ ofertas }) => {
                       ? `Paquete (${combo.nodos.join(', ')})`
                       : `Nodo Individual (${combo.nodos[0]})`
                   }
-                  secondary={
-                    combo.tipo === 'paquete'
-                      ? `Oferente: ${combo.oferente} - Precio Total: $${combo.precio} - Precio Promedio por Nodo: $${combo.precioPromedioPorNodo}`
-                      : `Oferente: ${combo.oferente} - Precio: $${combo.precio}`
-                  }
+                  secondary={`Oferente: ${combo.oferente} - Precio: $${combo.precio}`}
                 />
               </ListItem>
             ))}

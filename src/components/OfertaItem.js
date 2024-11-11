@@ -1,7 +1,17 @@
 import React from 'react';
 import { List, ListItem, ListItemText, Typography, Box, Stack, Card } from '@mui/material';
 
-const OfertaItem = ({ oferta }) => {
+const OfertaItem = ({ oferta, resultadoOptimo }) => {
+  // Función para verificar si una oferta individual está en el resultado óptimo
+  const isIndividualSelected = (nodo) => {
+    return resultadoOptimo?.some(item => item.tipo === 'individual' && item.oferente === oferta.oferente && item.nodos[0] === nodo);
+  };
+
+  // Función para verificar si un paquete está en el resultado óptimo
+  const isPackageSelected = (paquete) => {
+    return resultadoOptimo?.some(item => item.tipo === 'paquete' && item.oferente === oferta.oferente && item.nodos.join(',') === paquete.nodos.join(','));
+  };
+
   return (
     <Box mb={2}>
       <Typography variant="h6">{oferta.oferente}</Typography>
@@ -9,7 +19,7 @@ const OfertaItem = ({ oferta }) => {
       <List>
         {Object.entries(oferta.ofertas_individuales).map(([nodo, precio], index) => (
           <ListItem key={index}>
-            <Card sx={{ backgroundColor: 'lightblue', padding: 1, width: '100%' }}>
+            <Card sx={{ backgroundColor: isIndividualSelected(nodo) ? 'green' : 'lightblue', color: isIndividualSelected(nodo) ? 'white' : 'inherit', padding: 1, width: '100%' }}>
               <Stack direction="row" spacing={1}>
                 <Typography variant="body2">{nodo}:</Typography>
                 <Typography variant="body2">${precio}</Typography>
@@ -24,13 +34,9 @@ const OfertaItem = ({ oferta }) => {
           const avgPricePerNode = (paquete.precio_total / paquete.nodos.length).toFixed(2);
           return (
             <ListItem key={index}>
-              <Card sx={{ backgroundColor: 'lightblue', padding: 1, width: '100%' }}>
+              <Card sx={{ backgroundColor: isPackageSelected(paquete) ? 'green' : 'lightblue', color: isPackageSelected(paquete) ? 'white' : 'inherit', padding: 1, width: '100%' }}>
                 <ListItemText
-                  primary={
-                    <Typography variant="body2">
-                      Nodos: {paquete.nodos.join(', ')}
-                    </Typography>
-                  }
+                  primary={<Typography variant="body2">Nodos: {paquete.nodos.join(', ')}</Typography>}
                   secondary={
                     <Typography variant="body2">
                       Precio Total: ${paquete.precio_total} (Descuento: {paquete.descuento})<br />

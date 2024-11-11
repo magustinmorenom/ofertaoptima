@@ -5,6 +5,7 @@ import ResultadoOptimo from './components/ResultadoOptimo';
 
 const App = () => {
   const [ofertas, setOfertas] = useState([]);
+  const [resultadoOptimo, setResultadoOptimo] = useState([]); // Estado para la combinación óptima
 
   useEffect(() => {
     // Cargar el archivo JSON de ./data/ofertas.json
@@ -37,7 +38,10 @@ const App = () => {
           <Box key={index} p={1} width={{ xs: '100%', sm: '48%', md: '31%', lg: '23%' }}>
             <Card variant="outlined">
               <CardContent>
-                <OfertaItem oferta={oferta} />
+                <OfertaItem
+                  oferta={oferta}
+                  resultadoOptimo={resultadoOptimo} // Pasar el resultado óptimo
+                />
               </CardContent>
             </Card>
           </Box>
@@ -46,9 +50,9 @@ const App = () => {
 
       <Divider sx={{ marginY: 4 }} />
 
-      <Card >
+      <Card>
         <CardContent>
-          <ResultadoOptimo ofertas={ofertas} />
+          <ResultadoOptimo ofertas={ofertas} onResultadoOptimo={setResultadoOptimo} />
         </CardContent>
       </Card>
     </Container>
