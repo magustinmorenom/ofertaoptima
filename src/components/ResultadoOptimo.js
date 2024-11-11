@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, Button, List, ListItem, ListItemText, Card } from '@mui/material';
 
 const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
   const [resultado, setResultado] = useState(null);
@@ -91,6 +91,7 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
       
       {resultado && (
         <Box mt={2}>
+          
           <Typography variant="h6">Mejor Precio Total: ${resultado.mejorPrecioTotal}</Typography>
           <Typography variant="subtitle1">Detalles de la Combinación Óptima:</Typography>
           <List>
@@ -107,6 +108,7 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
               </ListItem>
             ))}
           </List>
+          
         </Box>
       )}
     </Box>

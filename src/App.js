@@ -73,20 +73,17 @@ const App = () => {
 
       <Card>
         <CardContent>
-          <ResultadoOptimo
-            ofertas={ofertas}
-            onResultadoOptimo={handleResultadoOptimo}
-          />
-        </CardContent>
-      </Card>
-
-      <Divider sx={{ marginY: 4 }} />
-
-  
-
-      <Card>
-        <CardContent>
-        <EmpateCheck resultadoOptimo={resultadoOptimo} todasLasOfertas={ofertas} />
+          <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+            <Box flex="1" minWidth="300px" p={1}>
+              <ResultadoOptimo
+                ofertas={ofertas}
+                onResultadoOptimo={handleResultadoOptimo}
+              />
+            </Box>
+            <Box flex="1" minWidth="300px" p={1}>
+              <EmpateCheck resultadoOptimo={resultadoOptimo} todasLasOfertas={ofertas} />
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
