@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, Card, CardContent, List, ListItem, ListItemText } from '@mui/material';
 
 const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
   const [empates, setEmpates] = useState([]);
+  const [alternativasEmpatadas, setAlternativasEmpatadas] = useState([]);
 
   useEffect(() => {
     const empatesEncontrados = [];
+    const nuevasAlternativas = [];
 
     resultadoOptimo.forEach((optima) => {
       const { oferente: oferenteOptimo, nodos, tipo, precio, precioPromedioPorNodo } = optima;
@@ -22,6 +24,16 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
               nodo: nodos[0],
               oferente: oferta.oferente,
               mensaje: `Empate en el nodo ${nodos[0]} con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
+            });
+
+            // Generar una alternativa completa incluyendo esta oferta individual
+            const alternativaCompleta = [...resultadoOptimo.filter(item => item.nodos[0] !== nodos[0]), 
+              { tipo: 'individual', nodo: nodos[0], oferente: oferta.oferente, precio }];
+            const totalAlternativa = alternativaCompleta.reduce((sum, item) => sum + item.precio, 0);
+
+            nuevasAlternativas.push({
+              alternativa: alternativaCompleta,
+              total: totalAlternativa
             });
           }
         });
@@ -41,29 +53,15 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
                 oferente: oferta.oferente,
                 mensaje: `Empate en paquete de nodos (${paquete.nodos.join(', ')}) con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
               });
-            }
-          });
-        });
-      }
 
-      // Empate en Paquetes Parcialmente Coincidentes
-      if (tipo === 'paquete') {
-        todasLasOfertas.forEach((oferta) => {
-          oferta.ofertas_paquete.forEach((paquete) => {
-            const nodosCoincidentes = paquete.nodos.filter(nodo => nodos.includes(nodo));
-            const mismoPrecioPromedio = (paquete.precio_total / paquete.nodos.length).toFixed(2) === precioPromedioPorNodo;
+              // Generar una alternativa completa incluyendo este paquete
+              const alternativaCompleta = [...resultadoOptimo.filter(item => JSON.stringify(item.nodos.sort()) !== JSON.stringify(nodos.sort())), 
+                { tipo: 'paquete', nodos: paquete.nodos, oferente: oferta.oferente, precio: paquete.precio_total }];
+              const totalAlternativa = alternativaCompleta.reduce((sum, item) => sum + item.precio, 0);
 
-            if (
-              oferta.oferente !== oferenteOptimo &&
-              nodosCoincidentes.length > 0 &&
-              nodosCoincidentes.length < nodos.length &&
-              mismoPrecioPromedio
-            ) {
-              empatesEncontrados.push({
-                tipo: 'parcial',
-                nodos: nodosCoincidentes,
-                oferente: oferta.oferente,
-                mensaje: `Paquete parcial con nodos (${nodosCoincidentes.join(', ')}) del oferente ${oferta.oferente} con el mismo precio promedio por nodo de $${precioPromedioPorNodo}.`,
+              nuevasAlternativas.push({
+                alternativa: alternativaCompleta,
+                total: totalAlternativa
               });
             }
           });
@@ -72,19 +70,39 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
     });
 
     setEmpates(empatesEncontrados);
+    setAlternativasEmpatadas(nuevasAlternativas);
   }, [resultadoOptimo, todasLasOfertas]);
 
   return (
     <Box mt={4}>
       <Typography variant="h6">Resultado de Empates</Typography>
       {empates.length > 0 ? (
-        <List>
-          {empates.map((empate, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={empate.mensaje} />
-            </ListItem>
-          ))}
-        </List>
+        <>
+          <List>
+            {empates.map((empate, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={empate.mensaje} />
+              </ListItem>
+            ))}
+          </List>
+          <Typography variant="h6" mt={4}>Alternativas de Combinaciones Empatadas</Typography>
+          <Box display="flex" flexWrap="wrap" gap={2} mt={2}>
+            {alternativasEmpatadas.map((alt, index) => (
+              <Card key={index} variant="outlined" sx={{ minWidth: 275 }}>
+                <CardContent>
+                  <Typography variant="h6">Alternativa {index + 1} - Total: ${alt.total}</Typography>
+                  {alt.alternativa.map((item, itemIndex) => (
+                    <Typography key={itemIndex} variant="body2">
+                      {item.tipo === 'paquete'
+                        ? `Paquete (${item.nodos.join(', ')}) - Oferente: ${item.oferente} - Precio: $${item.precio}`
+                        : `Nodo Individual (${item.nodo}) - Oferente: ${item.oferente} - Precio: $${item.precio}`}
+                    </Typography>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        </>
       ) : (
         <Typography variant="body1">No se encontraron empates.</Typography>
       )}
