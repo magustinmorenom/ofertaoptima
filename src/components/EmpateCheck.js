@@ -10,7 +10,7 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
     const nuevasAlternativas = [];
 
     resultadoOptimo.forEach((optima) => {
-      const { oferente: oferenteOptimo, nodos, tipo, precio, precioPromedioPorNodo } = optima;
+      const { oferente: oferenteOptimo, nodos, tipo, precio } = optima;
 
       // Empate en Ofertas Individuales
       if (tipo === 'individual') {
@@ -27,13 +27,15 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
             });
 
             // Generar una alternativa completa incluyendo esta oferta individual
-            const alternativaCompleta = [...resultadoOptimo.filter(item => item.nodos[0] !== nodos[0]), 
-              { tipo: 'individual', nodo: nodos[0], oferente: oferta.oferente, precio }];
+            const alternativaCompleta = [
+              ...resultadoOptimo.filter((item) => item.nodos[0] !== nodos[0]),
+              { tipo: 'individual', nodo: nodos[0], oferente: oferta.oferente, precio },
+            ];
             const totalAlternativa = alternativaCompleta.reduce((sum, item) => sum + item.precio, 0);
 
             nuevasAlternativas.push({
               alternativa: alternativaCompleta,
-              total: totalAlternativa
+              total: totalAlternativa,
             });
           }
         });
@@ -55,16 +57,55 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
               });
 
               // Generar una alternativa completa incluyendo este paquete
-              const alternativaCompleta = [...resultadoOptimo.filter(item => JSON.stringify(item.nodos.sort()) !== JSON.stringify(nodos.sort())), 
-                { tipo: 'paquete', nodos: paquete.nodos, oferente: oferta.oferente, precio: paquete.precio_total }];
+              const alternativaCompleta = [
+                ...resultadoOptimo.filter((item) => JSON.stringify(item.nodos.sort()) !== JSON.stringify(nodos.sort())),
+                { tipo: 'paquete', nodos: paquete.nodos, oferente: oferta.oferente, precio: paquete.precio_total },
+              ];
               const totalAlternativa = alternativaCompleta.reduce((sum, item) => sum + item.precio, 0);
 
               nuevasAlternativas.push({
                 alternativa: alternativaCompleta,
-                total: totalAlternativa
+                total: totalAlternativa,
               });
             }
           });
+
+          // Verificación de combinación de nodos individuales que igualen el paquete
+          const nodosIndividuales = Object.entries(oferta.ofertas_individuales)
+            .filter(([nodo]) => nodos.includes(nodo))
+            .map(([nodo, precio]) => ({ nodo, precio }));
+
+          const precioTotalIndividuales = nodosIndividuales.reduce((sum, item) => sum + item.precio, 0);
+
+          if (
+            oferta.oferente !== oferenteOptimo &&
+            nodosIndividuales.length === nodos.length &&
+            precioTotalIndividuales === precio
+          ) {
+            empatesEncontrados.push({
+              tipo: 'paquete (combinación de individuales)',
+              nodos: nodosIndividuales.map((item) => item.nodo),
+              oferente: oferta.oferente,
+              mensaje: `Empate en paquete de nodos (${nodosIndividuales.map((item) => item.nodo).join(', ')}) mediante ofertas individuales del oferente ${oferta.oferente} al mismo precio total de $${precio}.`,
+            });
+
+            // Generar una alternativa completa con los nodos individuales
+            const alternativaCompleta = [
+              ...resultadoOptimo.filter((item) => JSON.stringify(item.nodos.sort()) !== JSON.stringify(nodos.sort())),
+              ...nodosIndividuales.map((item) => ({
+                tipo: 'individual',
+                nodo: item.nodo,
+                oferente: oferta.oferente,
+                precio: item.precio,
+              })),
+            ];
+            const totalAlternativa = alternativaCompleta.reduce((sum, item) => sum + item.precio, 0);
+
+            nuevasAlternativas.push({
+              alternativa: alternativaCompleta,
+              total: totalAlternativa,
+            });
+          }
         });
       }
     });
