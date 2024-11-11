@@ -29,7 +29,7 @@
       "ofertas_individuales": { "A": 98, "B": 205, "C": 160, "D": 170, "E": 125 },
       "ofertas_paquete": [
         { "nodos": ["A", "D","B","C","E"], "precio_total": 530, "descuento": "4%" },
-        { "nodos": ["B", "E"], "precio_total": 300, "descuento": "5%" }
+        { "nodos": ["B", "E"], "precio_total": 100, "descuento": "5%" }
       ]
     }
   ]
