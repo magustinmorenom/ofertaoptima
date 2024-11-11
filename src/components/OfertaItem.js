@@ -23,6 +23,7 @@ const OfertaItem = ({ oferta, resultadoOptimo }) => {
               <Stack direction="row" spacing={1}>
                 <Typography variant="body2">{nodo}:</Typography>
                 <Typography variant="body2">${precio}</Typography>
+                {oferta.descuento && <Typography variant="body2"> (Descuento: {oferta.descuento})</Typography>}
               </Stack>
             </Card>
           </ListItem>

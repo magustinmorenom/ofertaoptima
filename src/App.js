@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Card, CardContent, Divider } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Divider, Paper, Button } from '@mui/material';
 import OfertaItem from './components/OfertaItem';
 import ResultadoOptimo from './components/ResultadoOptimo';
+import GrafoCombinaciones from './components/GrafoCombinaciones';
 
 const App = () => {
   const [ofertas, setOfertas] = useState([]);
-  const [resultadoOptimo, setResultadoOptimo] = useState([]); // Estado para la combinación óptima
+  const [resultadoOptimo, setResultadoOptimo] = useState([]);
+  const [combinacionesEvaluadas, setCombinacionesEvaluadas] = useState([]);
+  const [totalCombinaciones, setTotalCombinaciones] = useState(0); // Estado para el total de combinaciones
+  const [mostrarGrafo, setMostrarGrafo] = useState(false); // Estado para mostrar el grafo
 
   useEffect(() => {
     // Cargar el archivo JSON de ./data/ofertas.json
@@ -27,6 +31,14 @@ const App = () => {
     };
   }, []);
 
+  // Función para manejar el resultado óptimo y las combinaciones evaluadas
+  const handleResultadoOptimo = (resultado, combinaciones, total) => {
+    setResultadoOptimo(resultado);
+    setCombinacionesEvaluadas(combinaciones);
+    setTotalCombinaciones(total); // Guardar el total de combinaciones
+    setMostrarGrafo(false); // Reiniciar el estado de mostrar grafo
+  };
+
   return (
     <Container maxWidth="xl" sx={{ padding: '20px' }}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -40,7 +52,7 @@ const App = () => {
               <CardContent>
                 <OfertaItem
                   oferta={oferta}
-                  resultadoOptimo={resultadoOptimo} // Pasar el resultado óptimo
+                  resultadoOptimo={resultadoOptimo}
                 />
               </CardContent>
             </Card>
@@ -52,9 +64,42 @@ const App = () => {
 
       <Card>
         <CardContent>
-          <ResultadoOptimo ofertas={ofertas} onResultadoOptimo={setResultadoOptimo} />
+          <ResultadoOptimo
+            ofertas={ofertas}
+            onResultadoOptimo={handleResultadoOptimo}
+          />
         </CardContent>
       </Card>
+
+      <Divider sx={{ marginY: 4 }} />
+
+      {/* Mostrar el total de combinaciones y preguntar si se quiere ver el grafo */}
+      <Typography variant="h5" align="center" gutterBottom>
+        Total de combinaciones evaluadas: {totalCombinaciones}
+      </Typography>
+      <Box textAlign="center" my={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setMostrarGrafo(true)}
+          disabled={totalCombinaciones === 0}
+        >
+          Ver Grafo de Combinaciones Evaluadas
+        </Button>
+      </Box>
+
+      {mostrarGrafo && (
+        <Paper elevation={3} sx={{ padding: '20px', marginTop: '20px' }}>
+          <Typography variant="h5" align="center" gutterBottom>
+            Grafo de Combinaciones Evaluadas
+          </Typography>
+          <GrafoCombinaciones
+            combinaciones={combinacionesEvaluadas}
+            resultadoOptimo={resultadoOptimo}
+          />
+        </Paper>
+      )}
+      
     </Container>
   );
 };
