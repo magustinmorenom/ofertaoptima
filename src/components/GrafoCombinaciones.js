@@ -37,7 +37,7 @@ const GrafoCombinaciones = ({ combinaciones = [], resultadoOptimo = [] }) => {
         },
       };
     });
-  }, [combinaciones, resultadoOptimo]);
+  }, [combinaciones, resultadoOptimo, isComboInResultadoOptimo]);
 
   const edges = useMemo(() => {
     return (combinaciones || []).slice(1).map((_, index) => ({
@@ -49,7 +49,7 @@ const GrafoCombinaciones = ({ combinaciones = [], resultadoOptimo = [] }) => {
         stroke: isComboInResultadoOptimo(combinaciones[index + 1]) ? 'green' : 'black',
       },
     }));
-  }, [combinaciones, resultadoOptimo]);
+  }, [combinaciones, resultadoOptimo, isComboInResultadoOptimo]);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
