@@ -23,7 +23,7 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
               tipo: 'individual',
               nodo: nodos[0],
               oferente: oferta.oferente,
-              mensaje: `Empate en el nodo ${nodos[0]} con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
+              mensaje: `✋ Empate en el nodo ${nodos[0]} con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
             });
 
             // Generar una alternativa completa incluyendo esta oferta individual
@@ -53,7 +53,7 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
                 tipo: 'paquete',
                 nodos: paquete.nodos,
                 oferente: oferta.oferente,
-                mensaje: `Empate en paquete de nodos (${paquete.nodos.join(', ')}) con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
+                mensaje: `✋ Empate en paquete de nodos (${paquete.nodos.join(', ')}) con el oferente ${oferta.oferente} al mismo precio de $${precio}.`,
               });
 
               // Generar una alternativa completa incluyendo este paquete
@@ -86,7 +86,7 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
               tipo: 'paquete (combinación de individuales)',
               nodos: nodosIndividuales.map((item) => item.nodo),
               oferente: oferta.oferente,
-              mensaje: `Empate en paquete de nodos (${nodosIndividuales.map((item) => item.nodo).join(', ')}) mediante ofertas individuales del oferente ${oferta.oferente} al mismo precio total de $${precio}.`,
+              mensaje: `✋ Empate en paquete de nodos (${nodosIndividuales.map((item) => item.nodo).join(', ')}) mediante ofertas individuales del oferente ${oferta.oferente} al mismo precio total de $${precio}.`,
             });
 
             // Generar una alternativa completa con los nodos individuales
@@ -126,12 +126,12 @@ const EmpateCheck = ({ resultadoOptimo, todasLasOfertas }) => {
               </ListItem>
             ))}
           </List>
-          <Typography variant="h6" mt={4}>Alternativas de Combinaciones Empatadas</Typography>
+          <Typography variant="h6" mt={4}>👍 Alternativas de Combinaciones Empatadas</Typography>
           <Box display="flex" flexWrap="wrap" gap={2} mt={2}>
             {alternativasEmpatadas.map((alt, index) => (
-              <Card key={index} variant="outlined" sx={{ minWidth: 275 }}>
+              <Card key={index} variant="outlined" sx={{ minWidth: 275, backgroundColor: '#4285F4', color: 'white' }}>
                 <CardContent>
-                  <Typography variant="h6">Alternativa {index + 1} - Total: ${alt.total}</Typography>
+                  <Typography variant="h6">👉 Alternativa {index + 1} - Total: ${alt.total}</Typography>
                   {alt.alternativa.map((item, itemIndex) => (
                     <Typography key={itemIndex} variant="body2">
                       {item.tipo === 'paquete'

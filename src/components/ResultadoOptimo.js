@@ -90,25 +90,25 @@ const ResultadoOptimo = ({ ofertas, onResultadoOptimo }) => {
       </Button>
       
       {resultado && (
-        <Box mt={2}>
-          
-          <Typography variant="h6">Mejor Precio Total: ${resultado.mejorPrecioTotal}</Typography>
-          <Typography variant="subtitle1">Detalles de la Combinación Óptima:</Typography>
+        <Box mt={2} sx={{ backgroundColor: '#4285F4', color: 'white', padding: 2, borderRadius: 1 }}>
+          <Typography variant="h5">Mejor Precio Total: ${resultado.mejorPrecioTotal}</Typography>
+          <Typography variant="subtitle1" sx={{ fontSize: '1.2rem' }}>Detalles de la Combinación Óptima:</Typography>
           <List>
             {resultado.mejorCombinacion.map((combo, index) => (
               <ListItem key={index}>
                 <ListItemText
                   primary={
                     combo.tipo === 'paquete'
-                      ? `Paquete (${combo.nodos.join(', ')})`
+                      ? `Paquete (${combo.nodos.join(', ')}) - Precio Promedio: $${combo.precioPromedioPorNodo}`
                       : `Nodo Individual (${combo.nodo})`
                   }
                   secondary={`Oferente: ${combo.oferente} - Precio: $${combo.precio}`}
+                  primaryTypographyProps={{ sx: { fontSize: '1.3rem', fontWeight: 'bold' } }}
+                  secondaryTypographyProps={{ sx: { fontSize: '1.1rem', fontWeight: 'bold', color: 'white' } }}
                 />
               </ListItem>
             ))}
           </List>
-          
         </Box>
       )}
     </Box>

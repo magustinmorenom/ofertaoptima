@@ -71,16 +71,16 @@ const App = () => {
 
       <Divider sx={{ marginY: 4 }} />
 
-      <Card>
+      <Card sx={{ background: 'linear-gradient(to bottom, lightgrey, white)' }}>
         <CardContent>
           <Box display="flex" justifyContent="space-between" flexWrap="wrap">
-            <Box flex="1" minWidth="300px" p={1}>
+            <Box flex="1" minWidth="200px" p={1}>
               <ResultadoOptimo
                 ofertas={ofertas}
                 onResultadoOptimo={handleResultadoOptimo}
               />
             </Box>
-            <Box flex="1" minWidth="300px" p={1}>
+            <Box flex="1" minWidth="400px" p={1}>
               <EmpateCheck resultadoOptimo={resultadoOptimo} todasLasOfertas={ofertas} />
             </Box>
           </Box>
