@@ -31,38 +31,7 @@
         { "nodos": ["A", "D"], "precio_total": 260, "descuento": "4%" },
         { "nodos": ["B", "E"], "precio_total": 300, "descuento": "5%" }
       ]
-    },
-    {
-      "oferente": "Oferente5",
-      "ofertas_individuales": { "A": 115, "B": 210, "C": 145, "D": 165, "E": 135 },
-      "ofertas_paquete": [
-        { "nodos": ["A", "B", "C"], "precio_total": 450, "descuento": "6%" },
-        { "nodos": ["C", "D", "E"], "precio_total": 390, "descuento": "4%" }
-      ]
-    },
-    {
-      "oferente": "Oferente6",
-      "ofertas_individuales": { "A": 120, "B": 185, "C": 150, "D": 160, "E": 130 },
-      "ofertas_paquete": [
-        { "nodos": ["A", "E"], "precio_total": 30, "descuento": "3%" },
-        { "nodos": ["B", "C", "D"], "precio_total": 520, "descuento": "7%" }
-      ]
-    },
-    {
-      "oferente": "Oferente7",
-      "ofertas_individuales": { "A": 108, "B": 200, "C": 135, "D": 190, "E": 145 },
-      "ofertas_paquete": [
-        { "nodos": ["A", "B", "E"], "precio_total": 440, "descuento": "4%" },
-        { "nodos": ["C", "D"], "precio_total": 310, "descuento": "2%" }
-      ]
-    },
-    {
-      "oferente": "Oferente8",
-      "ofertas_individuales": { "A": 112, "B": 180, "C": 135, "D": 172, "E": 138 },
-      "ofertas_paquete": [
-        { "nodos": ["A", "C", "D"], "precio_total": 420, "descuento": "5%" },
-        { "nodos": ["B", "E"], "precio_total": 290, "descuento": "3%" }
-      ]
     }
+
   ]
 }
