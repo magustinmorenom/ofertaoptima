@@ -54,9 +54,9 @@ const App = () => {
         Ofertas de Licitación
       </Typography>
 
-      <Box display="flex" flexWrap="wrap" justifyContent="space-around">
+      <Box sx={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap', margin: '0 auto' }}>
         {ofertas.map((oferta, index) => (
-          <Box key={index} p={1} width={{ xs: '100%', sm: '48%', md: '31%', lg: '23%' }}>
+          <Box key={index} p={1} display="inline-block" width="300px">
             <Card variant="outlined">
               <CardContent>
                 <OfertaItem
