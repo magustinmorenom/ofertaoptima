@@ -3,6 +3,7 @@ import { Container, Typography, Box, Card, CardContent, Divider, Paper, Button }
 import OfertaItem from './components/OfertaItem';
 import ResultadoOptimo from './components/ResultadoOptimo';
 import GrafoCombinaciones from './components/GrafoCombinaciones';
+import EmpateCheck from './components/EmpateCheck';
 
 const App = () => {
   const [ofertas, setOfertas] = useState([]);
@@ -10,6 +11,8 @@ const App = () => {
   const [combinacionesEvaluadas, setCombinacionesEvaluadas] = useState([]);
   const [totalCombinaciones, setTotalCombinaciones] = useState(0); // Estado para el total de combinaciones
   const [mostrarGrafo, setMostrarGrafo] = useState(false); // Estado para mostrar el grafo
+  const [combinacionesEmpatadas, setCombinacionesEmpatadas] = useState([]); // Estado para las combinaciones empatadas
+  const [mostrarEmpates, setMostrarEmpates] = useState(false); // Estado para mostrar empates
 
   useEffect(() => {
     // Cargar el archivo JSON de ./data/ofertas.json
@@ -37,6 +40,12 @@ const App = () => {
     setCombinacionesEvaluadas(combinaciones);
     setTotalCombinaciones(total); // Guardar el total de combinaciones
     setMostrarGrafo(false); // Reiniciar el estado de mostrar grafo
+    setMostrarEmpates(false); // Reiniciar el estado de mostrar empates
+  };
+
+  // Función para manejar combinaciones empatadas desde EmpateCheck
+  const handleEmpates = (empates) => {
+    setCombinacionesEmpatadas(empates);
   };
 
   return (
@@ -62,12 +71,19 @@ const App = () => {
 
       <Divider sx={{ marginY: 4 }} />
 
-      <Card>
+      <Card sx={{ background: 'linear-gradient(to bottom, lightgrey, white)' }}>
         <CardContent>
-          <ResultadoOptimo
-            ofertas={ofertas}
-            onResultadoOptimo={handleResultadoOptimo}
-          />
+          <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+            <Box flex="1" minWidth="200px" p={1}>
+              <ResultadoOptimo
+                ofertas={ofertas}
+                onResultadoOptimo={handleResultadoOptimo}
+              />
+            </Box>
+            <Box flex="1" minWidth="400px" p={1}>
+              <EmpateCheck resultadoOptimo={resultadoOptimo} todasLasOfertas={ofertas} />
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
@@ -99,7 +115,7 @@ const App = () => {
           />
         </Paper>
       )}
-      
+
     </Container>
   );
 };
