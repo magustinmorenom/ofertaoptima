@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ofertaoptima/static/css/main.4ec1b33b.css",
+    "main.js": "/ofertaoptima/static/js/main.d4e3dba4.js",
+    "static/js/453.02fcc170.chunk.js": "/ofertaoptima/static/js/453.02fcc170.chunk.js",
+    "index.html": "/ofertaoptima/index.html",
+    "main.4ec1b33b.css.map": "/ofertaoptima/static/css/main.4ec1b33b.css.map",
+    "main.d4e3dba4.js.map": "/ofertaoptima/static/js/main.d4e3dba4.js.map",
+    "453.02fcc170.chunk.js.map": "/ofertaoptima/static/js/453.02fcc170.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4ec1b33b.css",
+    "static/js/main.d4e3dba4.js"
+  ]
+}
